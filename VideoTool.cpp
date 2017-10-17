@@ -31,6 +31,9 @@ const std::string windowName2 = "Thresholded Image";
 const std::string windowName3 = "After Morphological Operations";
 const std::string trackbarWindowName = "Trackbars";
 
+int H_MIN_R = 170;
+int S_MIN_Y = 147;
+int S_MAX_Y = 232;
 
 void on_mouse(int e, int x, int y, int d, void *ptr)
 {
@@ -182,6 +185,7 @@ int main(int argc, char* argv[])
 	//program
 	bool trackObjects = true;
 	bool useMorphOps = true;
+	bool trackerHelper = true;
 
 	Point p;
 	//Matrix to store each frame of the webcam feed
@@ -197,7 +201,7 @@ int main(int argc, char* argv[])
 	//video capture object to acquire webcam feed
 	VideoCapture capture;
 	//open capture object at location zero (default location for webcam)
-	capture.open(0);
+	capture.open("rtmp://172.16.254.99/live/nimic");
 	//set height and width of capture frame
 	capture.set(CV_CAP_PROP_FRAME_WIDTH, FRAME_WIDTH);
 	capture.set(CV_CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT);
@@ -216,7 +220,16 @@ int main(int argc, char* argv[])
 		cvtColor(cameraFeed, HSV, COLOR_BGR2HSV);
 		//filter HSV image between values and store filtered image to
 		//threshold matrix
-		inRange(HSV, Scalar(H_MIN, S_MIN, V_MIN), Scalar(H_MAX, S_MAX, V_MAX), threshold);
+		if (trackerHelper == true)
+		{
+			inRange(HSV, Scalar(H_MIN_R, S_MIN, V_MIN), Scalar(H_MAX, S_MAX, V_MAX), threshold);
+			trackerHelper = false;
+		}
+		else
+		{
+			inRange(HSV, Scalar(H_MIN, S_MIN_Y, V_MIN), Scalar(H_MAX, S_MAX_Y, V_MAX), threshold);
+			trackerHelper = true;
+		}
 		//perform morphological operations on thresholded image to eliminate noise
 		//and emphasize the filtered object(s)
 		if (useMorphOps)
@@ -230,7 +243,7 @@ int main(int argc, char* argv[])
 		//show frames
 		imshow(windowName2, threshold);
 		imshow(windowName, cameraFeed);
-		imshow(windowName1, HSV);
+		//imshow(windowName1, HSV);
 		setMouseCallback("Original Image", on_mouse, &p);
 		//delay 30ms so that screen can refresh.
 		//image will not appear without this waitKey() command
