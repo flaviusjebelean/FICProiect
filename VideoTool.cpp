@@ -5,6 +5,15 @@
 #include "opencv2/highgui/highgui.hpp"
 //#include <opencv2\cv.h>
 #include "opencv2/opencv.hpp"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h> 
+
 
 using namespace std;
 using namespace cv;
@@ -34,6 +43,63 @@ const std::string trackbarWindowName = "Trackbars";
 int H_MIN_R = 170;
 int S_MIN_Y = 147;
 int S_MAX_Y = 232;
+
+void error(const char *msg)
+{
+    perror(msg);
+    exit(0);
+}
+
+void connect_to_server(char *ip, char *port, char *input)
+{
+    int sockfd, portno, n;
+    struct sockaddr_in serv_addr;
+    struct hostent *server;
+
+    char buffer[256];
+    
+    portno = atoi(port);
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0) 
+        error("ERROR opening socket");
+    server = gethostbyname(ip);
+    if (server == NULL) {
+        fprintf(stderr,"ERROR, no such host\n");
+        exit(0);
+    }
+    
+    bzero((char *) &serv_addr, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    bcopy((char *)server->h_addr, 
+         (char *)&serv_addr.sin_addr.s_addr,
+         server->h_length);
+    serv_addr.sin_port = htons(portno);
+    if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) 
+        error("ERROR connecting");
+    
+    for (int i = 0; i < strlen(input); i++)
+    {
+        bzero(buffer,256);
+        if (input[i] == 'f' | input[i] == 's' | input[i] == 'l' | input[i] == 'r' | input[i] == 'b') 
+        {
+            sprintf(buffer,"%c",input[i]);
+            printf("%s\n",buffer);
+            n = write(sockfd,buffer,strlen(buffer));
+            if (n < 0) 
+               error("ERROR writing to socket");
+            sleep(1);
+        }
+        
+    }   
+         
+    sprintf(buffer,"%c",'s');
+    printf("%s\n",buffer);
+    n = write(sockfd,buffer,strlen(buffer));
+    if (n < 0) 
+        error("ERROR writing to socket");
+    sleep(1);
+    close(sockfd);
+}
 
 void on_mouse(int e, int x, int y, int d, void *ptr)
 {
@@ -187,7 +253,7 @@ int main(int argc, char* argv[])
 	bool useMorphOps = true;
 	bool trackerHelper = true;
 
-	Point p;
+	/*Point p;
 	//Matrix to store each frame of the webcam feed
 	Mat cameraFeed;
 	//matrix storage for HSV image
@@ -248,8 +314,10 @@ int main(int argc, char* argv[])
 		//delay 30ms so that screen can refresh.
 		//image will not appear without this waitKey() command
 		waitKey(30);
-	}
+	}*/
 
+  connect_to_server("193.226.12.217","20232","flrab");
+  
 	return 0;
 }
 

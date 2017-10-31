@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/cloud/FlaviusJebelean/FICProiect/VideoTool.cpp
+/home/cloud/Jebelean/FICProiect/VideoTool.cpp
 sstream
 -
 string
@@ -14,9 +14,25 @@ string
 iostream
 -
 opencv2/highgui/highgui.hpp
-/home/cloud/FlaviusJebelean/FICProiect/opencv2/highgui/highgui.hpp
+/home/cloud/Jebelean/FICProiect/opencv2/highgui/highgui.hpp
 opencv2/opencv.hpp
-/home/cloud/FlaviusJebelean/FICProiect/opencv2/opencv.hpp
+/home/cloud/Jebelean/FICProiect/opencv2/opencv.hpp
+stdio.h
+-
+stdlib.h
+-
+unistd.h
+-
+string.h
+-
+sys/types.h
+-
+sys/socket.h
+-
+netinet/in.h
+-
+netdb.h
+-
 
 /usr/local/include/opencv/cxcore.h
 opencv2/core/core_c.h

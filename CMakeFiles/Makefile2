@@ -46,14 +46,11 @@ RM = /usr/bin/cmake -E remove -f
 # Escaping for special characters.
 EQUALS = =
 
-# The program to use to edit the cache.
-CMAKE_EDIT_COMMAND = /usr/bin/cmake-gui
-
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/cloud/FlaviusJebelean/FICProiect
+CMAKE_SOURCE_DIR = /home/cloud/Jebelean/FICProiect
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/cloud/FlaviusJebelean/FICProiect
+CMAKE_BINARY_DIR = /home/cloud/Jebelean/FICProiect
 
 #=============================================================================
 # Target rules for target CMakeFiles/VideoTool.dir
@@ -62,7 +59,7 @@ CMAKE_BINARY_DIR = /home/cloud/FlaviusJebelean/FICProiect
 CMakeFiles/VideoTool.dir/all:
 	$(MAKE) -f CMakeFiles/VideoTool.dir/build.make CMakeFiles/VideoTool.dir/depend
 	$(MAKE) -f CMakeFiles/VideoTool.dir/build.make CMakeFiles/VideoTool.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/cloud/FlaviusJebelean/FICProiect/CMakeFiles  1
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/cloud/Jebelean/FICProiect/CMakeFiles  1
 	@echo "Built target VideoTool"
 .PHONY : CMakeFiles/VideoTool.dir/all
 
@@ -72,9 +69,9 @@ all: CMakeFiles/VideoTool.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/VideoTool.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/cloud/FlaviusJebelean/FICProiect/CMakeFiles 1
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/cloud/Jebelean/FICProiect/CMakeFiles 1
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/VideoTool.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/cloud/FlaviusJebelean/FICProiect/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/cloud/Jebelean/FICProiect/CMakeFiles 0
 .PHONY : CMakeFiles/VideoTool.dir/rule
 
 # Convenience name for target.
