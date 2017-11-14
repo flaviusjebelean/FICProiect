@@ -14,6 +14,7 @@
 #include <netinet/in.h>
 #include <netdb.h> 
 
+int my_x,my_y,adv_x,adv_y;
 
 using namespace std;
 using namespace cv;
@@ -244,6 +245,12 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
 		else putText(cameraFeed, "TOO MUCH NOISE! ADJUST FILTER", Point(0, 50), 1, 2, Scalar(0, 0, 255), 2);
 	}
 }
+
+void fight(int my_x, int my_y, int adv_x, int adv_y)
+{
+    printf("in functuin %d %d %d %d\n",my_x,my_y,adv_x,adv_y);
+}
+
 int main(int argc, char* argv[])
 {
 
@@ -253,7 +260,7 @@ int main(int argc, char* argv[])
 	bool useMorphOps = true;
 	bool trackerHelper = true;
 
-	/*Point p;
+	Point p;
 	//Matrix to store each frame of the webcam feed
 	Mat cameraFeed;
 	//matrix storage for HSV image
@@ -305,7 +312,20 @@ int main(int argc, char* argv[])
 		//filtered object
 		if (trackObjects)
 			trackFilteredObject(x, y, threshold, cameraFeed);
-
+    
+    if (trackerHelper == false)
+    {
+      my_x = x;
+      my_y = y;
+    }
+    else
+    {
+      adv_x = x;
+      adv_y = y;
+    }
+    
+    fight(my_x,my_y,adv_x,adv_y);
+    
 		//show frames
 		imshow(windowName2, threshold);
 		imshow(windowName, cameraFeed);
@@ -314,9 +334,9 @@ int main(int argc, char* argv[])
 		//delay 30ms so that screen can refresh.
 		//image will not appear without this waitKey() command
 		waitKey(30);
-	}*/
+	}
 
-  connect_to_server("193.226.12.217","20232","flrab");
+  //connect_to_server("193.226.12.217","20232","flrab");
   
 	return 0;
 }
