@@ -47,7 +47,7 @@ int S_MAX_Y = 232;
 float slope, mySlope;
 int my_x, my_y, adv_x, adv_y;
 int aux_x, aux_y;
-bool sl = false, fms = false;
+bool sl = false, fms = true;
 
 
 void error(const char *msg)
