@@ -14,8 +14,6 @@
 #include <netinet/in.h>
 #include <netdb.h> 
 
-int my_x,my_y,adv_x,adv_y;
-
 using namespace std;
 using namespace cv;
 //initial min and max HSV filter values.
@@ -44,6 +42,13 @@ const std::string trackbarWindowName = "Trackbars";
 int H_MIN_R = 170;
 int S_MIN_Y = 147;
 int S_MAX_Y = 232;
+
+//fight variables
+float slope, mySlope;
+int my_x, my_y, adv_x, adv_y;
+int aux_x, aux_y;
+bool sl = false, fms = false;
+
 
 void error(const char *msg)
 {
@@ -93,7 +98,7 @@ void connect_to_server(char *ip, char *port, char *input)
         
     }   
          
-    sprintf(buffer,"%c",'s');
+    //sprintf(buffer,"%c",'s');
     printf("%s\n",buffer);
     n = write(sockfd,buffer,strlen(buffer));
     if (n < 0) 
@@ -248,7 +253,38 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
 
 void fight(int my_x, int my_y, int adv_x, int adv_y)
 {
-    printf("in functuin %d %d %d %d\n",my_x,my_y,adv_x,adv_y);
+    printf("in funct %d %d %d %d\n",my_x,my_y,adv_x,adv_y);
+    slope = (adv_y - my_y)/(float)(adv_x - my_x);
+    printf("slope: %.2f\n",slope);
+    
+    if ((slope - mySlope) <= 0.1)
+    {
+        //go forward full speed; something with distance
+    }
+    else
+    {
+        if (fms == true)
+        {    
+            if (sl == true)
+            {
+                mySlope = (my_y - aux_y)/(float)(my_x - aux_x));
+                sl = false;
+            }
+            else
+            {
+                aux_x = my_x;
+                aux_y = my_y;
+                //move forward slightly
+                sl = true;
+            }
+            fms = false;
+        }
+        else
+        {
+            //rotate
+            fms = true;
+        }
+    }
 }
 
 int main(int argc, char* argv[])
@@ -295,12 +331,14 @@ int main(int argc, char* argv[])
 		//threshold matrix
 		if (trackerHelper == true)
 		{
-			inRange(HSV, Scalar(H_MIN_R, S_MIN, V_MIN), Scalar(H_MAX, S_MAX, V_MAX), threshold);
+			//inRange(HSV, Scalar(H_MIN_R, S_MIN, V_MIN), Scalar(H_MAX, S_MAX, V_MAX), threshold);
+      inRange(HSV, Scalar(109, 48, 117), Scalar(190, 240, 256), threshold);
 			trackerHelper = false;
 		}
 		else
 		{
-			inRange(HSV, Scalar(H_MIN, S_MIN_Y, V_MIN), Scalar(H_MAX, S_MAX_Y, V_MAX), threshold);
+			//inRange(HSV, Scalar(H_MIN, S_MIN_Y, V_MIN), Scalar(H_MAX, S_MAX_Y, V_MAX), threshold);
+      inRange(HSV, Scalar(12, 60, 70), Scalar(140, 240, 256), threshold); //galben
 			trackerHelper = true;
 		}
 		//perform morphological operations on thresholded image to eliminate noise
