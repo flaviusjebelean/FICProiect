@@ -14,6 +14,9 @@
 #include <netinet/in.h>
 #include <netdb.h> 
 
+#define IP "193.226.12.217"
+#define PORT "20232"
+
 using namespace std;
 using namespace cv;
 //initial min and max HSV filter values.
@@ -93,17 +96,10 @@ void connect_to_server(char *ip, char *port, char *input)
             n = write(sockfd,buffer,strlen(buffer));
             if (n < 0) 
                error("ERROR writing to socket");
-            sleep(1);
         }
         
     }   
          
-    //sprintf(buffer,"%c",'s');
-    printf("%s\n",buffer);
-    n = write(sockfd,buffer,strlen(buffer));
-    if (n < 0) 
-        error("ERROR writing to socket");
-    sleep(1);
     close(sockfd);
 }
 
@@ -259,29 +255,33 @@ void fight(int my_x, int my_y, int adv_x, int adv_y)
     
     if ((slope - mySlope) <= 0.1)
     {
-        //go forward full speed; something with distance
+        connect_to_server(IP,PORT,"f");
     }
     else
     {
         if (fms == true)
         {    
-            if (sl == true)
-            {
-                mySlope = (my_y - aux_y)/(float)(my_x - aux_x));
-                sl = false;
-            }
-            else
+            if (sl == false)
             {
                 aux_x = my_x;
                 aux_y = my_y;
-                //move forward slightly
+                connect_to_server(IP,PORT,"f") //move forward slightly
+                sleep(0.5);
+                connect_to_server(IP,PORT,"s");
                 sl = true;
             }
-            fms = false;
+            else
+            {
+                mySlope = (my_y - aux_y)/(float)(my_x - aux_x)); // find my slope aka my direction of movement
+                sl = false;
+                fms = false;
+            }
         }
         else
         {
-            //rotate
+            connect_to_server(IP,PORT,"l") //rotate
+            sleep(0.5);
+            connect_to_server(IP,PORT,"s");
             fms = true;
         }
     }
@@ -332,13 +332,13 @@ int main(int argc, char* argv[])
 		if (trackerHelper == true)
 		{
 			//inRange(HSV, Scalar(H_MIN_R, S_MIN, V_MIN), Scalar(H_MAX, S_MAX, V_MAX), threshold);
-      inRange(HSV, Scalar(109, 48, 117), Scalar(190, 240, 256), threshold);
+            inRange(HSV, Scalar(109, 48, 117), Scalar(190, 240, 256), threshold);
 			trackerHelper = false;
 		}
 		else
 		{
 			//inRange(HSV, Scalar(H_MIN, S_MIN_Y, V_MIN), Scalar(H_MAX, S_MAX_Y, V_MAX), threshold);
-      inRange(HSV, Scalar(12, 60, 70), Scalar(140, 240, 256), threshold); //galben
+            inRange(HSV, Scalar(12, 60, 70), Scalar(140, 240, 256), threshold); //galben
 			trackerHelper = true;
 		}
 		//perform morphological operations on thresholded image to eliminate noise
