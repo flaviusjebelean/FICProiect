@@ -250,7 +250,7 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
 void fight(int my_x, int my_y, int adv_x, int adv_y)
 {
     printf("in funct %d %d %d %d\n",my_x,my_y,adv_x,adv_y);
-    slope = (adv_y - my_y)/(float)(adv_x - my_x);
+    slope = (float)(adv_y - my_y)/(float)(adv_x - my_x);
     printf("slope: %.2f\n",slope);
     
     if ((slope - mySlope) <= 0.1)
@@ -265,21 +265,22 @@ void fight(int my_x, int my_y, int adv_x, int adv_y)
             {
                 aux_x = my_x;
                 aux_y = my_y;
-                connect_to_server(IP,PORT,"f") //move forward slightly
+                connect_to_server(IP,PORT,"f"); //move forward slightly
                 sleep(0.5);
                 connect_to_server(IP,PORT,"s");
                 sl = true;
             }
             else
             {
-                mySlope = (my_y - aux_y)/(float)(my_x - aux_x)); // find my slope aka my direction of movement
+                mySlope = (float)(my_y - aux_y)/(float)(my_x - aux_x); // find my slope aka my direction of movement
+                printf("my slope: %.2f\n",mySlope);
                 sl = false;
                 fms = false;
             }
         }
         else
         {
-            connect_to_server(IP,PORT,"l") //rotate
+            connect_to_server(IP,PORT,"lvc"); //rotate
             sleep(0.5);
             connect_to_server(IP,PORT,"s");
             fms = true;
@@ -332,13 +333,13 @@ int main(int argc, char* argv[])
 		if (trackerHelper == true)
 		{
 			//inRange(HSV, Scalar(H_MIN_R, S_MIN, V_MIN), Scalar(H_MAX, S_MAX, V_MAX), threshold);
-            inRange(HSV, Scalar(109, 48, 117), Scalar(190, 240, 256), threshold);
+      inRange(HSV, Scalar(109, 48, 117), Scalar(190, 240, 256), threshold); //red; adv coordinates
 			trackerHelper = false;
 		}
 		else
 		{
 			//inRange(HSV, Scalar(H_MIN, S_MIN_Y, V_MIN), Scalar(H_MAX, S_MAX_Y, V_MAX), threshold);
-            inRange(HSV, Scalar(12, 60, 70), Scalar(140, 240, 256), threshold); //galben
+      inRange(HSV, Scalar(12, 60, 70), Scalar(140, 240, 256), threshold); //galben; my coordinates
 			trackerHelper = true;
 		}
 		//perform morphological operations on thresholded image to eliminate noise
